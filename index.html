@@ -1299,7 +1299,10 @@ let currentRole = null;
 
 // Called once on page load — check if already logged in
 async function initAuth() {
-  if (!isDB()) return; // no DB = blocked overlay handles it
+  if (!isDB()) {
+    buildAccountsGrid();
+    return;
+  }
 
   // Show login screen while checking session
   showLoginScreen();
