@@ -1430,6 +1430,12 @@ async function doLogout() {
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('login-error').style.display = 'none';
+
+  const btn = document.getElementById('login-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '🔐 Login';
+  }
 }
 
 // ══════════════════════════════
