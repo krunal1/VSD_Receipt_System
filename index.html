@@ -681,28 +681,29 @@ window.addEventListener('DOMContentLoaded', () => {
   if (sk) document.getElementById('setup-key').value = sk;
 
   if (!isDB()) {
-    // No DB — show blocking overlay, skip auth
     document.getElementById('config-banner').style.display = 'block';
     const overlay = document.createElement('div');
     overlay.id = 'db-block-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(26,16,5,0.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;';
-    overlay.innerHTML = `
-      <div style="background:#fff;border-radius:16px;padding:32px;max-width:440px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.4);">
-        <div style="font-size:3rem;margin-bottom:12px;">🔒</div>
-        <h2 style="color:var(--saffron);margin-bottom:10px;font-size:1.4rem;">Database Not Connected</h2>
-        <p style="color:var(--muted);margin-bottom:20px;line-height:1.6;">
-          Ask your admin for the Supabase Project URL and API key.
-        </p>
-        <button class="btn btn-primary" onclick="document.getElementById('supabase-modal').classList.add('show');document.getElementById('db-block-overlay').style.display='none';">
-          🔗 Connect Now
-        </button>
-      </div>`;
+    const inner = document.createElement('div');
+    inner.style.cssText = 'background:#fff;border-radius:16px;padding:32px;max-width:440px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.4);';
+    inner.innerHTML = '<div style="font-size:3rem;margin-bottom:12px;">🔒</div>'
+      + '<h2 style="color:#E8671A;margin-bottom:10px;font-size:1.4rem;">Database Not Connected</h2>'
+      + '<p style="color:#7A6A50;margin-bottom:20px;line-height:1.6;">Ask your admin for the Supabase Project URL and API key.</p>';
+    const connectBtn = document.createElement('button');
+    connectBtn.className = 'btn btn-primary';
+    connectBtn.textContent = '🔗 Connect Now';
+    connectBtn.onclick = function() {
+      document.getElementById('supabase-modal').classList.add('show');
+      overlay.style.display = 'none';
+    };
+    inner.appendChild(connectBtn);
+    overlay.appendChild(inner);
     document.body.appendChild(overlay);
-    return; // stop here — no auth without DB
+  } else {
+    // DB ready — init auth (shows login screen)
+    initAuth();
   }
-
-  // DB is ready — init auth (shows login screen)
-  initAuth();
 });
 
 function saveSupabaseConfig() {
@@ -1512,7 +1513,7 @@ function switchTab(id) {
   _origSwitchTab(id);
   if (id === 'admin' && currentRole === 'admin') loadUsers();
 }
-
+function numberToWords(n) {
   if (!n) return 'Zero';
   const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
