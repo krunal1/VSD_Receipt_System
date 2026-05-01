@@ -925,6 +925,7 @@ function switchTab(id) {
   if (id === 'records') renderTable();
   if (id === 'bulk')    renderBulk();
   if (id === 'stats')   renderStats();
+  if (id === 'admin' && currentRole === 'admin') loadUsers();
 }
 
 // ══════════════════════════════
@@ -1528,12 +1529,6 @@ async function deleteUser(uid, email) {
   loadUsers();
 }
 
-// ── Override switchTab to load users when admin tab opens ──
-const _origSwitchTab = switchTab;
-function switchTab(id) {
-  _origSwitchTab(id);
-  if (id === 'admin' && currentRole === 'admin') loadUsers();
-}
 function numberToWords(n) {
   if (!n) return 'Zero';
   const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
