@@ -919,7 +919,9 @@ function switchTab(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
-  document.querySelectorAll('.tab-btn')[['new','records','bulk','stats'].indexOf(id)].classList.add('active');
+  //document.querySelectorAll('.tab-btn')[['new','records','bulk','stats'].indexOf(id)].classList.add('active');
+  const activeBtn = document.querySelector(`[onclick="switchTab('${id}')"]`);
+  if (activeBtn) activeBtn.classList.add('active');
   if (id === 'records') renderTable();
   if (id === 'bulk')    renderBulk();
   if (id === 'stats')   renderStats();
@@ -1378,12 +1380,17 @@ function applyRoleAccess() {
     'stats':   isAdmin,
     'admin':   isAdmin,
   };
-  const btns = document.querySelectorAll('.tab-btn');
-  const ids  = ['new','records','bulk','stats','admin'];
-  btns.forEach((btn, i) => {
-    if (ids[i]) btn.style.display = tabMap[ids[i]] ? '' : 'none';
+  //const btns = document.querySelectorAll('.tab-btn');
+  //const ids  = ['new','records','bulk','stats','admin'];
+  //btns.forEach((btn, i) => {
+  //  if (ids[i]) btn.style.display = tabMap[ids[i]] ? '' : 'none';
+  //});
+  //document.getElementById('tab-btn-admin').style.display = isAdmin ? '' : 'none';
+
+  ['records','bulk','stats','admin'].forEach(id => {
+    const btn = document.querySelector(`[onclick="switchTab('${id}')"]`);
+    if (btn) btn.style.display = isAdmin ? '' : 'none';
   });
-  document.getElementById('tab-btn-admin').style.display = isAdmin ? '' : 'none';
 
   // Volunteer profile card (logout) visible in admin tab for volunteers
   if (!isAdmin) {
